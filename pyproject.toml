@@ -1,0 +1,106 @@
+﻿[project]
+name = "documentation-autopilot"
+version = "0.1.0"
+description = "AI-powered system for automatically updating technical documentation"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Maninder Singh ", email = "manindersingh120996@gmail.com"}
+]
+
+dependencies = [
+    # Core framework
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    
+    # Configuration management
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0",
+    
+    # LLM and AI
+    "litellm>=1.17.0",
+    "langchain>=0.1.0",
+    "langchain-anthropic>=0.1.0",
+    "langgraph>=0.0.20",
+    "langsmith>=0.0.70",
+    
+    # Vector stores
+    "chromadb>=0.4.18",
+    "sentence-transformers>=2.2.2",
+    
+    # Databases
+    "sqlalchemy>=2.0.23",
+    "psycopg2-binary>=2.9.9",  # PostgreSQL driver
+    "neo4j>=5.14.0",
+    "redis>=5.0.1",
+    
+    # Message queues
+    "pika>=1.3.2",  # RabbitMQ
+    
+    # Storage
+    "minio>=7.2.0",
+    
+    # HTTP clients
+    "httpx>=0.25.2",
+    "requests>=2.31.0",
+    
+    # GitHub integration
+    "PyGithub>=2.1.1",
+    
+    # Utilities
+    "python-multipart>=0.0.6",
+    "python-json-logger>=2.0.7",
+    "tenacity>=8.2.3",  # Retry logic
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-asyncio>=0.21.1",
+    "pytest-cov>=4.1.0",
+    "black>=23.12.0",  # Code formatter
+    "ruff>=0.1.8",  # Linter
+    "mypy>=1.7.1",  # Type checker
+    "ipython>=8.18.1",
+    "ipdb>=0.13.13",
+]
+
+gcp = [
+    # GCP-specific dependencies (only needed for production deployment)
+    "google-cloud-pubsub>=2.18.4",
+    "google-cloud-storage>=2.14.0",
+    "google-cloud-secret-manager>=2.17.0",
+    "google-cloud-aiplatform>=1.38.1",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]   
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=src --cov-report=html --cov-report=term"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "I", "N"]
+ignore = ["E501"]  # Line too long (handled by black)
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

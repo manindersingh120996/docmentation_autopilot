@@ -1,9 +1,9 @@
-﻿[project]
+[project]
 name = "documentation-autopilot"
 version = "0.1.0"
 description = "AI-powered system for automatically updating technical documentation"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 authors = [
     {name = "Maninder Singh ", email = "manindersingh120996@gmail.com"}
 ]

@@ -1,0 +1,159 @@
+# Base configuration for Documentation Autopilot
+# This file contains defaults shared across all environments
+# Environment-specific files (local.yaml, production.yaml) override these
+
+system:
+  name: "documentation-autopilot"
+  version: "0.1.0"
+  environment: "development" # to be overridden by env. specific configurations
+
+application:
+  # Logging Configuration
+  logging: 
+    level: "INFO"
+    format: "json"
+    otuput: "stdout"
+    file_path: null
+    correlation_id_header: "X-Correlation-ID"
+  
+  # Feature flags
+  features:
+    enable_autonomous_updates: false
+    enable_graph_rag: true
+    enable_context_retrieval: true
+    enable_confidence_caliberation: true
+    enable_batching: true
+    batch_window_seconds: 30
+
+  # System Limits
+  limits:
+    max_webhook_processing_time_seconds: 5
+    max_analysis_time_seconds: 120
+    max_agent_workflow_time_seconds: 300
+    max_llm_retries: 3
+    max_concurrent_workers: 5
+
+  # Cost controls
+  cost_controls:
+    max_llm_spend_per_hour_usd: 10.0
+    enable_response_caching: true
+    cache_ttl_seconds: 86400
+
+
+# Layeer 1: Event Ingestion
+layer1_ingestion:
+  webhook_receiver:
+    host: "0.0.0.0"
+    port: 8000
+    allowed_origins:
+      - "*"
+    github_webhook_secret_env_var: "GITHUB_WEBHOOK_SECRET"
+    max_payload_size_mb: 10
+
+# Layer 2: Analysis
+layer2_analysis:
+  code_analyzer:
+    model_provider: "openrouter"
+    model_name: "anthropic/claude-3.5-sonnet-20241022"
+    temperature: 0.2
+    max_tokens: 4000
+    timeout_seconds: 30
+  
+  dependency_resolver:
+    max_traversal_depth: 5
+    cache_graph_queries: true
+    cache_ttl_seconds: 3600
+  
+  context_retriever:
+    embedding_model: "text-embedding-3-small"
+    top_k_results: 10
+    enable_reranking: true
+  
+  impact_generator:
+    model_provider: "openrouter"
+    model_name: "anthropic/claude-3.5-sonnet-20241022"
+    temperature: 0.3
+    max_tokens: 6000
+    confidence_threshold_high: 0.85
+    confidence_threshold_low: 0.50
+
+# Layer 3: Agent Orchestration
+layer3_orchestration:
+  workflow_engine:
+    enable_persistence: true
+    checkpoint_interval_seconds: 30
+    max_workflow_retries: 3
+  
+  doc_generator:
+    model_provider: "openrouter"
+    model_name: "anthropic/claude-3.5-sonnet-20241022"
+    temperature: 0.4
+    max_tokens: 8000
+  
+  validator:
+    model_provider: "openrouter"
+    model_name: "anthropic/claude-3.5-haiku-20241022"
+    temperature: 0.1
+    max_tokens: 2000
+  
+  confidence_scoring:
+    weights:
+      detection_confidence: 0.25
+      generation_confidence: 0.35
+      style_confidence: 0.20
+      historical_confidence: 0.20
+    enable_calibration: true
+    calibration_window_days: 30
+    min_samples_for_calibration: 100
+  
+  autonomy_thresholds:
+    autonomous_commit_threshold: 0.90
+    human_review_threshold: 0.60
+    exploration_rate: 0.05
+
+# Layer 4: Delivery
+layer4_delivery:
+  notifications:
+    slack:
+      enabled: false
+      webhook_url_env_var: "SLACK_WEBHOOK_URL"
+      default_channel: "#doc-autopilot"
+    github:
+      enabled: true
+      create_pull_requests: true
+      pr_auto_merge: false
+  
+  analytics:
+    enable_dashboard: true
+    dashboard_port: 8001
+    metrics_retention_days: 90
+
+# Infrastructure configuration
+infrastructure:
+  event_bus:
+    provider: "local_rabbitmq"
+  
+  vector_store:
+    provider: "chromadb"
+    collection_name: "documentation_context"
+  
+  graph_database:
+    provider: "neo4j"
+  
+  relational_database:
+    provider: "postgresql"
+    database_name: "docautopilot"
+    pool_size: 10
+    max_overflow: 20
+  
+  blob_storage:
+    provider: "minio"
+    bucket_name: "docautopilot-artifacts"
+  
+  secrets:
+    provider: "dotenv"
+  
+  llm:
+    provider: "openrouter"
+    api_key_env_var: "OPENROUTER_API_KEY"
+    base_url: "https://openrouter.ai/api/v1"

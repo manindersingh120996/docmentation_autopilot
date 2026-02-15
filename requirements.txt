@@ -1,0 +1,5 @@
+# Install project dependencies from pyproject.toml
+-e .
+
+# This file exists for compatibility with tools that expect requirements.txt
+# The actual dependencies are defined in pyproject.toml

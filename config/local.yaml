@@ -1,0 +1,70 @@
+# Local development configuration
+# Overrides base.yaml with settings specific to running on localhost
+
+system:
+  environment: "local"
+
+application:
+  logging:
+    level: "DEBUG"
+    format: "text"
+    output: "both"
+    file_path: "logs/app.log"
+  
+  features:
+    enable_autonomous_updates: false
+  
+  limits:
+    max_concurrent_workers: 2
+  
+  cost_controls:
+    max_llm_spend_per_hour_usd: 2.0
+
+# Infrastructure overrides for local Docker services
+infrastructure:
+  event_bus:
+    provider: "local_rabbitmq"
+    rabbitmq:
+      host: "localhost"
+      port: 5672
+      username: "guest"
+      password: "guest"
+      virtual_host: "/"
+      exchange: "docautopilot"
+      queue: "code-changes"
+      durable: true
+  
+  vector_store:
+    provider: "chromadb"
+    chromadb:
+      persist_directory: "./data/chromadb"
+  
+  graph_database:
+    provider: "neo4j"
+    neo4j:
+      uri_env_var: "NEO4J_URI"
+      username_env_var: "NEO4J_USERNAME"
+      password_env_var: "NEO4J_PASSWORD"
+      database: "neo4j"
+  
+  relational_database:
+    provider: "postgresql"
+    postgresql:
+      host: "localhost"
+      port: 5432
+      username: "postgres"
+      password_env_var: "POSTGRES_PASSWORD"
+      database_name: "docautopilot"
+  
+  blob_storage:
+    provider: "minio"
+    minio:
+      endpoint: "localhost:9000"
+      access_key: "minioadmin"
+      secret_key: "minioadmin"
+      secure: false
+  
+  secrets:
+    provider: "dotenv"
+    dotenv:
+      file_path: ".env.local"

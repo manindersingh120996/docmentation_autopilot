@@ -186,6 +186,48 @@ class BlobStorage(ABC):
         """
         pass
 
+    @abstractmethod
+    def store_from_file(
+        self,
+        key: str,
+        file_path: str,
+        content_type: Optional[str] = None,
+        metadata: Optional[Dict[str, str]] = None,
+        overwrite: bool = True
+    ) -> BlobMetadata:
+        """
+        Upload a local file to blob storage.
+
+        More memory-efficient than store() for large files because it
+        streams from disk rather than loading the entire file into RAM.
+
+        Args:
+            key:          Unique identifier for the blob.
+            file_path:    Absolute or relative path to the local file.
+            content_type: MIME type. If None, inferred from file extension.
+            metadata:     Optional custom metadata.
+            overwrite:    Whether to replace existing blob.
+
+        Returns:
+            BlobMetadata of the stored blob.
+
+        Raises:
+            FileNotFoundError:     If file_path doesn't exist locally.
+            BlobAlreadyExistsError: If key exists and overwrite=False.
+            BlobStorageError:      If upload fails.
+
+        Example:
+            # Upload a code snapshot without loading it into memory
+            blob_storage.store_from_file(
+                key="snapshots/pytorch/abc123def456.zip",
+                file_path="/tmp/pytorch_snapshot.zip",
+                content_type="application/zip",
+                metadata={"commit_sha": "abc123def456", "repo": "pytorch/pytorch"}
+            )
+        """
+        pass
+
+
 
     @abstractmethod
     def retrieve(self, key: str) -> bytes:

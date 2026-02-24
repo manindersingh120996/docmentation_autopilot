@@ -113,7 +113,7 @@ class SubscriptionError(EventBusError):
     """
     pass
 
-class AcknowledgementError(EventBusError):
+class AcknowledgmentError(EventBusError):
     """
     Raised when acknowledging or negatively acknowledging a message fails.
     

@@ -159,7 +159,7 @@ class QueryError(GraphDatabaseError):
 # The Abstract Base Class
 # ---------------------------------------------------------------------------
 
-class GraphDatabse(ABC):
+class GraphDatabase(ABC):
     """
     Abstract interfaces for graph database implementations.
 

@@ -53,6 +53,7 @@ dependencies = [
     "python-multipart>=0.0.6",
     "python-json-logger>=2.0.7",
     "tenacity>=8.2.3",  # Retry logic
+    "portalocker>=2.8.2",  # Cross-platform file locking
 ]
 
 [tool.setuptools.packages.find]

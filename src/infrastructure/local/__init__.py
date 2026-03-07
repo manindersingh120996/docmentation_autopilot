@@ -9,8 +9,10 @@ All implementations can run in Docker containers on a developer's laptop.
 
 from src.infrastructure.local.rabbitmq_event_bus import RabbitMQEventBus
 from src.infrastructure.local.dotenv_secrets_manager import DotenvSecretsManager
+from src.infrastructure.local.chromadb_vector_store import ChromaDBVectorStore
 
 __all__ = [
     'RabbitMQEventBus',
-    'DotenvSecretsManager'
+    'DotenvSecretsManager',
+    'ChromaDBVectorStore'
 ]

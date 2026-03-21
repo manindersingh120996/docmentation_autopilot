@@ -14,10 +14,12 @@ from src.infrastructure.local.rabbitmq_event_bus import RabbitMQEventBus
 from src.infrastructure.local.dotenv_secrets_manager import DotenvSecretsManager
 from src.infrastructure.local.chromadb_vector_store import ChromaDBVectorStore
 from src.infrastructure.local.neo4j_graph_db import Neo4jGraphDatabase
+from src.infrastructure.local.minio_blob_storage import MinioBlobStorage
 
 __all__ = [
     'RabbitMQEventBus',
     'DotenvSecretsManager',
     'ChromaDBVectorStore',
-    'Neo4jGraphDatabase'
+    'Neo4jGraphDatabase',
+    'MinioBlobStorage',
 ]
